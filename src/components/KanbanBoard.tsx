@@ -1,8 +1,17 @@
 import PlusIcon from '../icons/PlusIcon';
-import {useState} from "react";
+import {useMemo, useState} from "react";
+import { Column, Id } from '../types';
+import ColumnContainer from './ColumnContainer';
+import { DndContext, DragOverlay, DragStartEvent } from '@dnd-kit/core';
+import { SortableContext } from '@dnd-kit/sortable';
+import { createPortal } from 'react-dom';
 
 function KanbanBoard() {
-  const [columns, setColumns] = useState([]);
+  const [columns, setColumns] = useState<Column[]>([]);
+  const columnsId = useMemo(() => columns.map((col)=> col.id), [columns]);
+
+const [activeColumn, setActiveColumn] = useState<Column | null>(null);
+
   return ( 
   <div 
   className="
@@ -16,7 +25,19 @@ function KanbanBoard() {
     px-[40px]
   "
   >
-    <div className="m-auto">
+    <DndContext onDragStart={onDragStart}>
+    <div className="m-auto flex gap-4">
+      <div className='flex gap-4'>
+        <SortableContext items={columnsId}>
+        {columns.map((col) => (
+      <ColumnContainer 
+      key={col.id} 
+      column={col} 
+      deleteColumn={deleteColumn}
+      />
+      ))}
+      </SortableContext>
+      </div>
      <button 
      onClick={() => {
       createNewColumn();
@@ -41,17 +62,47 @@ function KanbanBoard() {
       Add Column
       </button>
     </div>
+
+    { createPortal(<DragOverlay>
+      {activeColumn && (
+      <ColumnContainer 
+      column={activeColumn} 
+      deleteColumn={deleteColumn}
+      />
+      )}
+    </DragOverlay>, 
+    document.body
+    )}
+    </DndContext>
   </div>
  ); 
 
+    function createNewColumn() {
+      const columnToAdd:Column = {
+        id: generateId(),
+        title: `Column ${columns.length + 1}`,
+      }
 
+      setColumns([...columns, columnToAdd]);
+    }
 
+    function deleteColumn(id: Id) {
+      const filteredColumns = columns.filter(col => col.id !== id);
+      setColumns(filteredColumns);
+    }
 
-    function createNewColumn() {}
+    function onDragStart(event: DragStartEvent) {
+      console.log("DRAG START", event );
+      if (event.active.data.current?.type === "Column") {
+        setActiveColumn(event.active.data.current.column);
+        return;
+      }
+    }
 }
 
-
-
-
+function generateId() {
+  /*Generate random number between 0 and 10000*/
+  return Math.floor(Math.random() * 10001);
+}
 
 export default KanbanBoard
