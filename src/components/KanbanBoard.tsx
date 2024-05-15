@@ -2,7 +2,7 @@ import PlusIcon from '../icons/PlusIcon';
 import {useMemo, useState} from "react";
 import { Column, Id } from '../types';
 import ColumnContainer from './ColumnContainer';
-import { DndContext, DragOverlay, DragStartEvent } from '@dnd-kit/core';
+import { DndContext, DragEndEvent, DragOverlay, DragStartEvent } from '@dnd-kit/core';
 import { SortableContext } from '@dnd-kit/sortable';
 import { createPortal } from 'react-dom';
 
@@ -25,7 +25,7 @@ const [activeColumn, setActiveColumn] = useState<Column | null>(null);
     px-[40px]
   "
   >
-    <DndContext onDragStart={onDragStart}>
+    <DndContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
     <div className="m-auto flex gap-4">
       <div className='flex gap-4'>
         <SortableContext items={columnsId}>
@@ -98,7 +98,24 @@ const [activeColumn, setActiveColumn] = useState<Column | null>(null);
         return;
       }
     }
+
+    function onDragEnd(event: DragEndEvent) {
+      const {active, over } = event;
+
+      if (!over) return;
+
+      const activeColumnId = active.id;
+      const overColumnId = over.id;
+
+      if (activeColumnId === overColumnId) return;
+
+    }
 }
+
+
+
+
+
 
 function generateId() {
   /*Generate random number between 0 and 10000*/
