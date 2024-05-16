@@ -51,6 +51,7 @@ const sensors = useSensors(
       updateColumn={updateColumn}
       createTask={createTask}
       deleteTask={deleteTask}
+      updateTask={updateTask}
       tasks={tasks.filter(task => task.columnId === col.id)}
       />
       ))}
@@ -89,6 +90,7 @@ const sensors = useSensors(
       updateColumn={updateColumn}
       createTask={createTask}
       deleteTask={deleteTask}
+      updateTask={updateTask}
       tasks={tasks.filter(task => task.columnId === activeColumn.id)}
       />
       )}
@@ -113,6 +115,16 @@ const sensors = useSensors(
     function deleteTask(id: Id) {
       const newTasks = tasks.filter((task)=> task.id !== id);
       setTasks(newTasks);
+    }
+
+    function updateTask (id: Id, content: string) {
+      const newTasks = tasks.map(task => {
+        if (task.id !== id) return task;
+        return { ...task, content};
+      });
+
+        setTasks(newTasks);
+
     }
 
     function createNewColumn() {
