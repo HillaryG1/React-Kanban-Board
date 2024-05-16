@@ -64,7 +64,7 @@ function ColumnContainer(props: Props) {
     bg-columnBackgroundColor
     opacity-40
     border-2
-    border-rose-500
+    border-blue-500
     w-[350px]
     h-[500px]
     max-h-[500px]
@@ -131,7 +131,7 @@ function ColumnContainer(props: Props) {
           {!editMode && column.title}
           {editMode && (
             <input
-              className="bg-black focus:border-rose-500 border rounded outline-none px-2"
+              className="bg-black focus:border-blue-500 border rounded outline-none px-2"
               value={column.title}
               onChange={(e) => updateColumn(column.id, e.target.value)}
               autoFocus
@@ -177,7 +177,7 @@ function ColumnContainer(props: Props) {
       </div>
       {/* Column footer */}
       <button
-        className="flex gap-2 items-center border-columnBackgroundColor border-2 rounded-md p-4 border-x-columnBackgroundColor hover:bg-mainBackgroundColor hover:text-rose-500 active:bg-black"
+        className="flex gap-2 items-center border-columnBackgroundColor border-2 rounded-md p-4 border-x-columnBackgroundColor hover:bg-mainBackgroundColor hover:text-blue-500 active:bg-black"
         onClick={() => {
           createTask(column.id);
         }}
