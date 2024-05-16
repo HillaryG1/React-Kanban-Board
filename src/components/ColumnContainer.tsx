@@ -4,6 +4,7 @@ import { Column, Id, Task } from "../types";
 import {CSS} from "@dnd-kit/utilities"
 import { useState } from "react";
 import PlusIcon from "../icons/PlusIcon";
+import TaskCard from "./TaskCard";
 
 interface Props {
   column: Column;
@@ -148,12 +149,10 @@ const {
     </div>
     
     {/* Column task container */}
-    <div className="flex flex-grow">
-      {
-        tasks.map(task => (
-          <div key={task.id}> {task.content} </div>
-        ))
-      }
+    <div className="flex flex-grow flex-col gap-4 p-2 overflow-x-hidden overflow-y-auto">
+      {tasks.map(task => (
+        <TaskCard key={task.id} task={task} />
+        ))}
     </div>
     {/* Column footer */}
     <button 
